@@ -48,7 +48,8 @@
 * **SQL:**
   - [x] `SELECT`, `WHERE`, `GROUP BY`, агрегаты (`COUNT`, `SUM`, `AVG`).
   - [x] Все виды `JOIN` (`INNER`, `LEFT`), расчет воронок и конверсий.
-  - [ ] Условные агрегации (`CASE WHEN`), работа с датами (`strftime`, `DATE`).
+  - [x] Условные агрегации и сегментация (`CASE WHEN`).
+  - [ ] Работа с датами (`strftime`, `DATE`).
 * **Python (Pandas):**
   - [x] Подключение к БД из Python (`sqlite3`, `pd.read_sql`).
   - [x] Написание аналитического скрипта с чистого листа (`test_zero.py`).
