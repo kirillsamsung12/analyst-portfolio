@@ -1,9 +1,12 @@
-select 
-    strftime('%Y-%m', tx_date) as месяц,
-    count(*) as количество_операций,
-    round(sum(amount), 2) as объем_денег,
-    round(avg(amount), 2) as средний_чек
+select
+    user_id as Идентификатор_клиента,
+    tx_id as Идентификатор_операции,
+    tx_date as поле_даты,
+    amount as поле_суммы,
+    row_number() over (partition by user_id order by tx_date ASC) as номер_покупки
+
 from transactions
-where status = 'success'
-group by месяц 
-order by месяц;
+
+where status ='success'
+order by user_id, tx_date
+LIMIT 15;
