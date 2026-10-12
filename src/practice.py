@@ -33,7 +33,7 @@ conn = sqlite3.connect("data/fintech_sandbox.db")
 # Инструмент pd берёт провод conn, выполняет внутри базы SQL-запрос,
 # забирает строки и строит в памяти красивую двухмерную таблицу DataFrame.
 # Мы сохраняем её в коробку df_users.
-df_users = pd.read_sql("SELECT * FROM users", conn)
+df_users = pd.read_sql("SELECT user_id, city FROM users", conn)
 
 # ---------------------------------------------------------------------
 # 5. КРУГЛЫЕ () VS КВАДРАТНЫЕ [] СКОБКИ — ГЛАВНОЕ ПРАВИЛО:
@@ -54,4 +54,4 @@ df_users = pd.read_sql("SELECT * FROM users", conn)
 # [Таблица] .[Сгруппируй по статусу] [Возьми столбец ID] .[Посчитай уникальные]
 # =====================================================================
 
-print(df_users.groupby('status')['user_id'].nunique())
+print(df_users)
