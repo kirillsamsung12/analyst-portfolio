@@ -1,10 +1,19 @@
-select 
-    tx_id,
-    tx_date,
-    amount,
-    round(sum(amount) over (order by tx_date asc), 2) as накопленная_сумма,
-    LAG(tx_date) over (order by tx_date asc) as прошлая_дата,
-    ROUND(julianday(tx_date) - julianday(LAG(tx_date) over (order by tx_date asc)), 1) as прошло_дней
+with крупные_покупки as (
+    select
+        user_id,
+        tx_id,
+        amount,
+        dense_rank() over (partition by user_id order by amount desc) as ранг
+    from transactions
+    where status = 'success'
+)
 
-from transactions
-where user_id = 2 and status = 'success';
+select 
+    user_id,
+    tx_id,
+    amount,
+    ранг
+from крупные_покупки
+where ранг <=3
+order by user_id, ранг
+LIMIT 15;
