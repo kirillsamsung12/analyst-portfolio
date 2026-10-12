@@ -1,16 +1,19 @@
-select
-    case 
-        when u.age <=25 then 'Молодые'
-        when u.age <=45 then 'Взрослые'
-        when u.age >45 then 'Зрелые'
-        end as возрастная_группа,
-    count(distinct u.user_id) as колличество_клиентов,
-    round(sum(t.amount), 2) as revenue,
-    round(avg(t.amount), 2) as avg_revenue
-    from users u
-    join transactions t on t.user_id = u.user_id
-    where t.status = 'success' and u.age is not null and t.amount is not null and u.status = 'active'
-    group by возрастная_группа
-    order by revenue desc;
+with помесячный_отчет as 
+(
 
-    
+    select
+        strftime('%Y-%m', tx_date) as месяц,
+        round(sum(amount), 2) as выручка_за_месяц
+    from transactions
+
+    where status ='success'
+
+    group by месяц  
+)
+select 
+    месяц,
+    выручка_за_месяц,
+    round(sum(выручка_за_месяц) over (order by месяц asc), 2) as накопительный_итог
+
+from помесячный_отчет
+order by месяц asc;
