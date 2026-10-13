@@ -1,13 +1,18 @@
-with помесячный_отчет as (
-    select
-        strftime ('%Y-%m', signup_date) as месяц,
-        count(distinct user_id) as новые_клиенты
-    from users
-    group by месяц
-)
+with таблица_по_рангам as(
+    select 
+        user_id,
+        tx_id,
+        amount,
+        category,
+        dense_rank() over (partition by user_id order by amount desc) as ранг
+    from transactions
+    where status = 'success' and category is not null)
 select 
-    месяц,
-    новые_клиенты,
-    SUM(новые_клиенты) OVER (ORDER BY месяц ASC) AS общее_число_клиентов
-from помесячный_отчет
-order by месяц asc;
+    user_id,
+    tx_id,
+    amount,
+    category
+from таблица_по_рангам
+where ранг = 1
+order by amount desc
+limit 15;
