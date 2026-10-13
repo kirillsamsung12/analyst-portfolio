@@ -1,19 +1,13 @@
-with помесячный_отчет as 
-(
-
+with помесячный_отчет as (
     select
-        strftime('%Y-%m', tx_date) as месяц,
-        round(sum(amount), 2) as выручка_за_месяц
-    from transactions
-
-    where status ='success'
-
-    group by месяц  
+        strftime ('%Y-%m', signup_date) as месяц,
+        count(distinct user_id) as новые_клиенты
+    from users
+    group by месяц
 )
 select 
     месяц,
-    выручка_за_месяц,
-    round(sum(выручка_за_месяц) over (order by месяц asc), 2) as накопительный_итог
-
+    новые_клиенты,
+    SUM(новые_клиенты) OVER (ORDER BY месяц ASC) AS общее_число_клиентов
 from помесячный_отчет
 order by месяц asc;
