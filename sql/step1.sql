@@ -9,7 +9,7 @@ select
     count(t.tx_id) as число_покупок
 from users u
 left join transactions t
-    on u.user_id = t.user_id
+    on u.user_id = t.user_id and t.status = 'success'
 group by u.user_id
 order by число_покупок desc;
 
